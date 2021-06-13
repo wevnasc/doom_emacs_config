@@ -26,7 +26,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-xcode
-      doom-font (font-spec :family "Fira Code" :size 14 :weight 'regular)
+      doom-font (font-spec :family "Fira Code" :size 14 :weight 'light)
       doom-big-font (font-spec :family "Fira Code" :size 24)
       doom-variable-pitch-font (font-spec :family "Fira Code"))
 
@@ -55,91 +55,5 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
-  (when (file-directory-p nudev-emacs-path)
-    (add-to-list 'load-path nudev-emacs-path)
-    (require 'nu)))
+(org-babel-load-file "~/.doom.d/custom-config.org")
 
-;; Environment
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setenv "PATH" (concat (getenv "PATH") ":/Users/weverson.nascimento/.asdf/shims"))
-(add-to-list 'exec-path "/usr/local/bin")
-(add-to-list 'exec-path "~/.asdf/shims")
-(add-to-list 'exec-path "~/rust-analyzer/target/release")
-
-(setq default-directory "~"
-      mac-command-modifier 'meta
-      projectile-project-search-path '("~/dev/nu" "~/dev/projects" "~/dev/personal"))
-
-;; Clojure
-(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-(add-hook 'clojure-mode-hook #'enable-paredit-mode)
-(add-hook 'clojurescript-mode-hook #'enable-paredit)
-
-(setq nrepl-popup-on-error nil)
-(setq nrepl-popup-stacktraces-in-repl t)
-
-(add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
-(add-hook 'nrepl-mode-hook 'paredit-mode)
-
-(after! cider
- (set-popup-rule! "^\\*cider-repl" :select nil :width 85 :side 'right :slot 1))
-
-(use-package! clojure-mode
-  :config
-  (setq clojure-indent-style 'align-arguments
-        clojure-thread-all-but-last t
-        clojure-align-forms-automatically t
-        comment-start ";"
-        yas-minor-mode 1))
-
-;; LSP
-(use-package! lsp-mode
-  :commands lsp
-  :hook ((clojure-mode . lsp)
-         (rustic-mode . lsp))
-  :config
-  (setq lsp-headerline-breadcrumb-enable nil
-        lsp-lens-enable t
-        lsp-semantic-tokens-enable t
-        lsp-signature-auto-activate nil)
-  (push "[/\\\\][^/\\\\]*\\.\\(json\\|pyc\\|class\\)$" lsp-file-watch-ignored-directories)
-  (dolist (clojure-all-modes '(clojure-mode
-                               clojurec-mode
-                               clojurescript-mode
-                               clojurex-mode))
-    (add-to-list 'lsp-language-id-configuration `(,clojure-all-modes . "clojure")))
-  (advice-add #'lsp-rename :after (lambda (&rest _) (projectile-save-project-buffers))))
-
-(setq lsp-rust-server 'rust-analyzer)
-
-(use-package! lsp-ui-mode
-  :after lsp-mode
-  :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-doc-include-signature nil
-        lsp-ui-doc-position 'top
-        lsp-ui-doc-header t
-        lsp-ui-doc-enable t
-        lsp-ui-doc-include-signature t
-        lsp-ui-doc-use-childframe t
-        lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-ignore-duplicate t
-        lsp-ui-sideline-show-code-actions nil
-        lsp-ui-sideline-show-symbol t
-        lsp-ui-doc-border (doom-color 'fg)
-        lsp-ui-peek-fontify 'always))
-
-;; Shortcuts
-(map! :ne "M-/" #'comment-or-uncomment-region)
-(map! :ne "SPC v" #'er/expand-region)
-
-(define-key evil-insert-state-map (kbd "<up>") 'nope)
-(define-key evil-insert-state-map (kbd "<down>") 'nope)
-(define-key evil-insert-state-map (kbd "<left>") 'nope)
-(define-key evil-insert-state-map (kbd "<right>") 'nope)
-
-(define-key evil-normal-state-map (kbd "<up>") 'nope)
-(define-key evil-normal-state-map (kbd "<down>") 'nope)
-(define-key evil-normal-state-map (kbd "<left>") 'nope)
-(define-key evil-normal-state-map (kbd "<right>") 'nope)
