@@ -26,6 +26,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-xcode
+      doom-themes-treemacs-theme "doom-colors"
       doom-font (font-spec :family "Fira Code" :size 14 :weight 'light)
       doom-big-font (font-spec :family "Fira Code" :size 24)
       doom-variable-pitch-font (font-spec :family "Fira Code"))

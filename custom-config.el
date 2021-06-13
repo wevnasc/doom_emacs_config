@@ -75,7 +75,7 @@
         lsp-ui-doc-border (doom-color 'fg)
         lsp-ui-peek-fontify 'always))
 
-(setq disable-evil-keys (list "<up>" "<down>" "<left>" "<right>" "<return>" "<backspace>"))
+(setq disable-evil-keys (list "<up>" "<down>" "<left>" "<right>"))
 
 (dolist (key disable-evil-keys)
   (define-key evil-insert-state-map (kbd key) 'nope)

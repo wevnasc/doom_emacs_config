@@ -87,7 +87,7 @@
 #+END_SRC
 ** Disable keys in evil mode
 #+BEGIN_SRC emacs-lisp
-(setq disable-evil-keys (list "<up>" "<down>" "<left>" "<right>" "<return>" "<backspace>"))
+(setq disable-evil-keys (list "<up>" "<down>" "<left>" "<right>"))
 
 (dolist (key disable-evil-keys)
   (define-key evil-insert-state-map (kbd key) 'nope)
