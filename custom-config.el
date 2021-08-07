@@ -28,9 +28,6 @@
 (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
 (add-hook 'nrepl-mode-hook 'paredit-mode)
 
-(after! cider
- (set-popup-rule! "^\\*cider-repl" :select nil :width 85 :side 'right :slot 1))
-
 (use-package! clojure-mode
   :config
   (setq clojure-indent-style 'align-arguments
@@ -42,7 +39,8 @@
 (use-package! lsp-mode
   :commands lsp
   :hook ((clojure-mode . lsp)
-         (rustic-mode . lsp))
+         (rustic-mode . lsp)
+         (python-mode . lsp))
   :config
   (setq lsp-headerline-breadcrumb-enable nil
         lsp-lens-enable t
@@ -75,11 +73,8 @@
         lsp-ui-doc-border (doom-color 'fg)
         lsp-ui-peek-fontify 'always))
 
-(setq disable-evil-keys (list "<up>" "<down>" "<left>" "<right>"))
-
-(dolist (key disable-evil-keys)
-  (define-key evil-insert-state-map (kbd key) 'nope)
-  (define-key evil-normal-state-map (kbd key) 'nope))
-
 (map! :ne "M-/" #'comment-or-uncomment-region)
 (map! :ne "SPC v" #'er/expand-region)
+
+(after! projectile
+  (pushnew! projectile-globally-ignored-directories ".pytest_cache" "__pycache__" "venv"))
