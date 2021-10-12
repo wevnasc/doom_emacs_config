@@ -25,10 +25,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-wilmersdorf
+(setq doom-theme 'doom-horizon
+      doom-dark+-blue-modeline t
       doom-themes-treemacs-theme "doom-colors"
-      doom-font (font-spec :family "Fira Code" :size 14 :weight 'light)
-      doom-big-font (font-spec :family "Fira Code" :size 24)
+      doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'light)
+      doom-big-font (font-spec :family "JetBrais Mono" :size 24)
       doom-variable-pitch-font (font-spec :family "Fira Code"))
 
 ;; If you use `org' and don't want your org files in the default location below,
@@ -56,5 +57,45 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(org-babel-load-file "~/.doom.d/custom-config.org")
 
+;; load executable files on emacs
+(dolist (path '("/usr/local/bin" "~/.asdf/shims"))
+  (when (file-directory-p path)
+    (add-to-list 'exec-path path)
+    (setenv "PATH" (concat (getenv "PATH") ":" path))))
+
+;; load nubank config
+(let ((nudev-emacs-path "~/dev/nu/nudev/ides/emacs/"))
+  (when (file-directory-p nudev-emacs-path)
+    (add-to-list 'load-path nudev-emacs-path)
+    (require 'nu)))
+
+;; Load project folders to be discovery by projectile
+(setq projectile-project-search-path '("~/dev/nu" "~/dev/wevnasc"))
+
+;; Enable paredit for clojure, clojurescript and repl mode
+(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+(add-hook 'clojure-mode-hook #'enable-paredit-mode)
+(add-hook 'clojurescript-mode-hook #'enable-paredit)
+(add-hook 'nrepl-mode-hook 'paredit-mode)
+
+;; Cider config
+(setq cider-font-lock-dynamically '(macro core function var))
+
+(use-package! clojure-mode
+  :config
+  (setq clojure-indent-style 'align-arguments
+        clojure-thread-all-but-last t
+        clojure-align-forms-automatically t
+        comment-start ";"
+        yas-minor-mode t))
+
+(after! lsp-ui
+  (setq lsp-ui-doc-enable 't
+        lsp-ui-doc-max-width 300
+        lsp-ui-doc-delay 4
+        lsp-ui-doc-position 'at-point))
+
+;; keybinds
+(map! :ne "M-/" #'comment-or-uncomment-region)
+(map! :ne "SPC v" #'er/expand-region)
